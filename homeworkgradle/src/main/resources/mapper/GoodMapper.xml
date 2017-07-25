@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace指用户自定义的命名空间。 -->
+<mapper namespace="eight.mapper.GoodMapper">
+
+<!-- 
+	id="save"是唯一的标示符
+	parameterType属性指明插入时使用的参数类型
+	useGeneratedKeys="true"表示使用数据库的自动增长策略
+ -->
+	<select id="selectAllGood" resultType="good">
+		select * from good
+	</select>
+	<select id="selectGoodById" parameterType="int" resultType="good">
+		select * from good where id=#{id}
+	</select>
+	<insert id="insertGoodIntoCar" >
+		insert into car(user_id,good_id,count) values(#{user_id},#{good_id},#{count})
+	</insert>
+	<update id="updateGood">
+		update good set count=count-#{count} where id=#{id}
+	</update>
+	<select id="selectAllCar" parameterType="int" resultMap="selectCarResultMap">
+		select * from car where user_id=#{id} order by id DESC
+	</select>
+	<resultMap id="selectCarResultMap" type="car">
+		<id property="id" column="id" />
+		<result property="count" column="count" />
+		<association property="good" column="good_id"
+		select="selectGoodById" javaType="good" />
+	</resultMap>
+</mapper>
